@@ -41,34 +41,35 @@ def get_ai_response(user_message: str, level: str, conversation_history: list, e
 def text_to_speech(text: str, level: str, gender: str = "male") -> bytes:
     # Male voices
     male_voices = {
-        "beginner":     "Charon-PlayAI",
-        "intermediate": "Atlas-PlayAI",
-        "advanced":     "Orion-PlayAI",
+        "beginner":     "Fritz-PlayAI",
+        "intermediate": "Fritz-PlayAI",
+        "advanced":     "Fritz-PlayAI",
     }
     # Female voices
     female_voices = {
         "beginner":     "Celeste-PlayAI",
-        "intermediate": "Aoede-PlayAI",
-        "advanced":     "Leda-PlayAI",
+        "intermediate": "Celeste-PlayAI",
+        "advanced":     "Celeste-PlayAI",
     }
 
     voices = female_voices if gender == "female" else male_voices
-    voice = voices.get(level, "Atlas-PlayAI")
+    voice = voices.get(level, "Fritz-PlayAI")
 
     # Remove feedback section from TTS
     speak_text = text
     if "FEEDBACK_START" in text:
         speak_text = text.split("FEEDBACK_START")[0].strip()
 
+    if not speak_text:
+        speak_text = text
+
     response = client.audio.speech.create(
         model="playai-tts",
         voice=voice,
-        input=speak_text,
+        input=speak_text[:500],  # max 500 belgi
         response_format="wav"
     )
     return response.read()
-
-
 def get_conversation_starter(level: str) -> str:
     starters = CONVERSATION_STARTERS.get(level, CONVERSATION_STARTERS["intermediate"])
     return random.choice(starters)
@@ -105,4 +106,5 @@ Be encouraging and constructive."""
         max_tokens=500,
         temperature=0.7,
     )
+
     return response.choices[0].message.content
