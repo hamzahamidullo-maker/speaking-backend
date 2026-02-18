@@ -39,7 +39,7 @@ def get_ai_response(user_message: str, level: str, conversation_history: list, e
 
 
 def text_to_speech(text: str, level: str, gender: str = "male") -> bytes:
-    # Male voices
+    return b""
     male_voices = {
         "beginner":     "Fritz-PlayAI",
         "intermediate": "Fritz-PlayAI",
@@ -108,3 +108,4 @@ Be encouraging and constructive."""
     )
 
     return response.choices[0].message.content
+
